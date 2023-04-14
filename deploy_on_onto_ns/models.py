@@ -3,6 +3,10 @@ from pathlib import Path
 
 from pydantic import BaseModel, Field, validator
 
+DEPLOYMENT_SCRIPTS = (
+    Path(__file__).resolve().parent.parent.resolve() / "deployment_scripts"
+)
+
 
 class DeployService(BaseModel):
     """A service to deploy on onto-ns.com."""
@@ -14,9 +18,10 @@ class DeployService(BaseModel):
     @validator("script")
     def script_exists(cls, value: Path) -> Path:
         """Check that the deployment script exists."""
-        if not value.exists():
+        resolved_value = value.relative_to(DEPLOYMENT_SCRIPTS).resolve()
+        if not resolved_value.exists():
             raise ValueError(f"Deployment script {value} does not exist.")
-        return value.resolve()
+        return resolved_value
 
 
 class DeployServices(BaseModel):
