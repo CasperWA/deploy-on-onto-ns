@@ -26,7 +26,7 @@ APP = FastAPI(
 @APP.get("/", response_model=DeployOnOntoNsResponse)
 async def deploy_service(
     service: str = Query(..., description="The service to deploy")
-) -> dict[str, str]:
+) -> dict[str, str | int]:
     """Deploy `service` on onto-ns.com.
 
     Run local bash script to deploy `service` on onto-ns.com.
@@ -50,8 +50,12 @@ async def deploy_service(
         stderr=subprocess.PIPE,
     )
     stdout, stderr = await process.communicate()
+    if process.returncode is None:
+        raise RuntimeError("Process did not return a return code.")
+
     return {
         "service": service,
+        "returncode": process.returncode,
         "stdout": stdout.decode("utf8"),
         "stderr": stderr.decode("utf8"),
     }

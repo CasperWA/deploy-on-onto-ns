@@ -43,6 +43,7 @@ class DeployServices(BaseModel):
 class DeployOnOntoNsResponse(BaseModel):
     """The response from the deployment service."""
 
+    returncode: int = Field(..., description="The return code from the deployment.")
     service: str = Field(..., description="The service that was deployed.")
     stdout: str = Field(..., description="The stdout from the deployment script.")
     stderr: str = Field(..., description="The stderr from the deployment script.")
