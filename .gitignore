@@ -1,0 +1,14 @@
+# dev
+.*_cache/
+.coverage
+coverage.xml
+
+# secrets
+.env
+
+# running
+logs/
+
+# local scripts
+deployment_scripts/*
+!deployment_scripts/deploy_services.yml
