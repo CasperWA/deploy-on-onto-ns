@@ -3,6 +3,7 @@ FROM python:3.10-slim as base
 WORKDIR /app
 
 COPY deploy_on_onto_ns deploy_on_onto_ns/
+COPY deployment_scripts deployment_scripts/
 COPY pyproject.toml LICENSE README.md ./
 
 RUN python -m pip install -U pip && \

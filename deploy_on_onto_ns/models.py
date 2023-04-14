@@ -18,7 +18,12 @@ class DeployService(BaseModel):
     @validator("script")
     def script_exists(cls, value: Path) -> Path:
         """Check that the deployment script exists."""
-        resolved_value = value.relative_to(DEPLOYMENT_SCRIPTS).resolve()
+        if value.is_absolute():
+            resolved_value = value.resolve()
+        else:
+            # Expect it to be relative to the deployment scripts directory.
+            resolved_value = (DEPLOYMENT_SCRIPTS / value).resolve()
+
         if not resolved_value.exists():
             raise ValueError(f"Deployment script {value} does not exist.")
         return resolved_value

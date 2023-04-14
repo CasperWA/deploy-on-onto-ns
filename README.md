@@ -25,6 +25,7 @@ docker build --pull -t deploy-on-onto-ns --target development .
 docker run --rm -d \
   --name "deploy-on-onto-ns" \
   -p "8000:80" \
+  --volume "$(pwd):/app" \
   deploy-on-onto-ns
 ```
 

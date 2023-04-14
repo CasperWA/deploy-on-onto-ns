@@ -4,7 +4,7 @@ from pathlib import Path
 from shlex import quote
 
 import yaml
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, HTTPException, Query, status
 
 from deploy_on_onto_ns import __version__
 from deploy_on_onto_ns.logger import LOGGER
@@ -38,12 +38,14 @@ async def deploy_service(
         The response from the deployment service.
 
     """
-    services = available_services()
-    if service not in services:
+    if service not in AVAILABLE_SERVICES:
         LOGGER.error("Service %r does not exist.", service)
-        raise ValueError(f"Service {service!r} does not exist.")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Service {service!r} does not exist.",
+        )
 
-    script = services[service].as_posix()
+    script = AVAILABLE_SERVICES[service].as_posix()
     process = await create_subprocess_shell(
         f"bash {quote(script)}",
         stdout=subprocess.PIPE,
@@ -87,3 +89,6 @@ def available_services() -> dict[str, Path]:
             mapping[alias] = service.script
 
     return mapping
+
+
+AVAILABLE_SERVICES = available_services()
