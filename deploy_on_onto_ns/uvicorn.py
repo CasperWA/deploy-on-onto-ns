@@ -8,4 +8,6 @@ class UvicornWorker(OriginalUvicornWorker):
     CONFIG_KWARGS = {
         "server_header": False,
         "headers": [("Server", "Deploy on onto-ns.com")],
+        "proxy_headers": True,
+        "root_path": "/dlite",
     }
