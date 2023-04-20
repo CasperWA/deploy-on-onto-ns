@@ -21,6 +21,7 @@ APP = FastAPI(
     description=(
         Path(__file__).resolve().parent.parent.resolve() / "README.md"
     ).read_text(encoding="utf8"),
+    openapi_prefix="/dlite",
 )
 
 
