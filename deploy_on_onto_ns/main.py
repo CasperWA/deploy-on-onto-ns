@@ -1,4 +1,5 @@
 """The main application module."""
+import os
 from asyncio import create_subprocess_shell, subprocess
 from pathlib import Path
 from shlex import quote
@@ -25,7 +26,12 @@ APP = FastAPI(
 
 @APP.get("/", response_model=DeployOnOntoNsResponse)
 async def deploy_service(
-    service: str = Query(..., description="The service to deploy")
+    service: str = Query(..., description="The service to deploy"),
+    env: list[str] = Query(
+        [],
+        description="The environment variables to set for the deployment script.",
+        regex=r"^[A-Za-z_][A-Za-z0-9_]*=[^=]*$",
+    ),
 ) -> dict[str, str | int]:
     """Deploy `service` on onto-ns.com.
 
@@ -33,6 +39,7 @@ async def deploy_service(
 
     Parameters:
         service: The service to deploy.
+        env: The environment variables to set for the deployment script.
 
     Returns:
         The response from the deployment service.
@@ -45,15 +52,29 @@ async def deploy_service(
             detail=f"Service {service!r} does not exist.",
         )
 
+    script_env = os.environ.copy()
+    for env_var in env:
+        key, value = env_var.split("=", 1)
+        script_env[key] = value
+
     script = AVAILABLE_SERVICES[service].as_posix()
+
+    LOGGER.info("Running script %r", script)
+    LOGGER.debug("with environment: %r.", script_env)
+
     process = await create_subprocess_shell(
         f"bash {quote(script)}",
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
+        env=script_env,
     )
     stdout, stderr = await process.communicate()
     if process.returncode is None:
-        raise RuntimeError("Process did not return a return code.")
+        LOGGER.error("Process did not return a return code.")
+        raise HTTPException(
+            status_code=status.HTTP_417_EXPECTATION_FAILED,
+            detail="Process did not return a return code.",
+        )
 
     return {
         "service": service,
