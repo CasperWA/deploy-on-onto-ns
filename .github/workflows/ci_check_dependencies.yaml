@@ -17,5 +17,7 @@ jobs:
       python_version: "3.10"
       install_extras: "[dev]"
       pr_labels: "CI/CD"
+      ignore: |
+        dependency-name=pydantic...update-types=version-update:semver-major
     secrets:
       PAT: ${{ secrets.CI_TOKEN }}
