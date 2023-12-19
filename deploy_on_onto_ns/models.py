@@ -1,7 +1,7 @@
 """Pydantic data models."""
 from pathlib import Path
 
-from pydantic import BaseModel, Field, validator
+from pydantic import field_validator, BaseModel, Field
 
 DEPLOYMENT_SCRIPTS = (
     Path(__file__).resolve().parent.parent.resolve() / "deployment_scripts"
@@ -15,7 +15,8 @@ class DeployService(BaseModel):
     script: Path = Field(..., description="The path to the deployment script.")
     aliases: list[str] = Field([], description="The aliases for the service.")
 
-    @validator("script")
+    @field_validator("script", mode="after")
+    @classmethod
     def script_exists(cls, value: Path) -> Path:
         """Check that the deployment script exists."""
         if value.is_absolute():
@@ -36,7 +37,8 @@ class DeployServices(BaseModel):
         ..., description="The services available for deploy."
     )
 
-    @validator("services")
+    @field_validator("services", mode="after")
+    @classmethod
     def services_unique(cls, value: list[DeployService]) -> list[DeployService]:
         """Check that the services are unique."""
         names = [service.name for service in value]
