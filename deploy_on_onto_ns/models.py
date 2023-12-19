@@ -1,7 +1,10 @@
 """Pydantic data models."""
-from pathlib import Path
+from __future__ import annotations
 
-from pydantic import BaseModel, Field, validator
+from pathlib import Path
+from typing import Annotated
+
+from pydantic import BaseModel, Field, field_validator
 
 DEPLOYMENT_SCRIPTS = (
     Path(__file__).resolve().parent.parent.resolve() / "deployment_scripts"
@@ -11,11 +14,14 @@ DEPLOYMENT_SCRIPTS = (
 class DeployService(BaseModel):
     """A service to deploy on onto-ns.com."""
 
-    name: str = Field(..., description="The name of the service.")
-    script: Path = Field(..., description="The path to the deployment script.")
-    aliases: list[str] = Field([], description="The aliases for the service.")
+    name: Annotated[str, Field(description="The name of the service.")]
+    script: Annotated[Path, Field(description="The path to the deployment script.")]
+    aliases: Annotated[
+        list[str], Field(description="The aliases for the service.")
+    ] = []
 
-    @validator("script")
+    @field_validator("script", mode="after")
+    @classmethod
     def script_exists(cls, value: Path) -> Path:
         """Check that the deployment script exists."""
         if value.is_absolute():
@@ -32,11 +38,12 @@ class DeployService(BaseModel):
 class DeployServices(BaseModel):
     """The data model for the `deploy_services.yml` file."""
 
-    services: list[DeployService] = Field(
-        ..., description="The services available for deploy."
-    )
+    services: Annotated[
+        list[DeployService], Field(description="The services available for deploy.")
+    ]
 
-    @validator("services")
+    @field_validator("services", mode="after")
+    @classmethod
     def services_unique(cls, value: list[DeployService]) -> list[DeployService]:
         """Check that the services are unique."""
         names = [service.name for service in value]
@@ -48,7 +55,9 @@ class DeployServices(BaseModel):
 class DeployOnOntoNsResponse(BaseModel):
     """The response from the deployment service."""
 
-    returncode: int = Field(..., description="The return code from the deployment.")
-    service: str = Field(..., description="The service that was deployed.")
-    stdout: str = Field(..., description="The stdout from the deployment script.")
-    stderr: str = Field(..., description="The stderr from the deployment script.")
+    returncode: Annotated[
+        int, Field(description="The return code from the deployment.")
+    ]
+    service: Annotated[str, Field(description="The service that was deployed.")]
+    stdout: Annotated[str, Field(description="The stdout from the deployment script.")]
+    stderr: Annotated[str, Field(description="The stderr from the deployment script.")]

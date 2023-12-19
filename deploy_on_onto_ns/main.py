@@ -1,8 +1,11 @@
 """The main application module."""
+from __future__ import annotations
+
 import os
 from asyncio import create_subprocess_shell, subprocess
 from pathlib import Path
 from shlex import quote
+from typing import Annotated
 
 import yaml
 from fastapi import FastAPI, HTTPException, Query, status
@@ -27,12 +30,14 @@ APP = FastAPI(
 
 @APP.get("/", response_model=DeployOnOntoNsResponse)
 async def deploy_service(
-    service: str = Query(..., description="The service to deploy"),
-    env: list[str] = Query(
-        [],
-        description="The environment variables to set for the deployment script.",
-        regex=r"^[A-Za-z_][A-Za-z0-9_]*=[^=]*$",
-    ),
+    service: Annotated[str, Query(description="The service to deploy")],
+    env: Annotated[
+        list[str],
+        Query(
+            description="The environment variables to set for the deployment script.",
+            pattern=r"^[A-Za-z_][A-Za-z0-9_]*=[^=]*$",
+        ),
+    ] = [],  # noqa: B006
 ) -> dict[str, str | int]:
     """Deploy `service` on onto-ns.com.
 
