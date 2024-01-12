@@ -20,7 +20,7 @@ def disable_logging():
     Usage:
 
     ```python
-    from dlite_entities_service.logger import disable_logging
+    from deploy_on_onto_ns.logger import disable_logging
 
     # Do stuff, logging to all handlers.
     # ...

@@ -7,7 +7,7 @@ COPY deployment_scripts deployment_scripts/
 COPY pyproject.toml LICENSE README.md ./
 
 RUN python -m pip install -U pip && \
-  pip install -U pip setuptools wheel flit && \
+  pip install -U pip setuptools wheel && \
   pip install -U -e .
 
 FROM base as development

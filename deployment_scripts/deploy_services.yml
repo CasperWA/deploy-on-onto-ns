@@ -1,8 +1,8 @@
 services:
-  - name: dlite_entities_service
+  - name: entities_service
     # This is the (relative or absolute) path to the script that will be run
     # If the path is relative, it will be relative to this file
-    script: dlite_entities_service.sh
+    script: entities_service.sh
     # Any aliases to also activate deployment of this service
     aliases:
       - dlite-entities-service

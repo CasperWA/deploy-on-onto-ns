@@ -1,9 +1,12 @@
 [build-system]
-requires = ["flit_core >=3.4,<4"]
-build-backend = "flit_core.buildapi"
+requires = ["hatchling ~=1.21"]
+build-backend = "hatchling.build"
 
-[tool.flit.module]
-name = "deploy_on_onto_ns"
+[tool.hatch.version]
+path = "deploy_on_onto_ns/__init__.py"
+
+[tool.hatch.build]
+only-include = ["deploy_on_onto_ns", "deployment_scripts"]
 
 [project]
 name = "deploy-on-onto-ns"
@@ -22,7 +25,6 @@ classifiers = [
     "Operating System :: OS Independent",
     "Private :: Do Not Upload",
 ]
-keywords = ["dlite", "mongodb"]
 requires-python = "~=3.10"
 dynamic = ["version", "description"]
 
