@@ -44,7 +44,7 @@ def disable_logging():
 def initiate_logging() -> None:
     """Initiate logging."""
     # Instantiate LOGGER
-    logger = logging.getLogger("deploy-on-onto-ns")
+    logger = logging.getLogger("deploy_on_onto_ns")
     logger.setLevel(logging.DEBUG)
 
     # Save a file with all messages (DEBUG level)

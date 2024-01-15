@@ -3,22 +3,36 @@ from __future__ import annotations
 
 import os
 from asyncio import create_subprocess_shell, subprocess
+from contextlib import asynccontextmanager
 from logging import getLogger
 from pathlib import Path
 from shlex import quote
-from typing import Annotated
+from typing import TYPE_CHECKING, Annotated
 
 import yaml
 from fastapi import FastAPI, HTTPException, Query, status
 
 from deploy_on_onto_ns import __version__
+from deploy_on_onto_ns.logger import initiate_logging
 from deploy_on_onto_ns.models import (
     DEPLOYMENT_SCRIPTS_DIR,
     DeployOnOntoNsResponse,
     DeployServices,
+    EnvironmentString,
 )
 
+if TYPE_CHECKING:  # pragma: no cover
+    from collections.abc import AsyncIterator
+
 LOGGER = getLogger(__name__)
+
+
+@asynccontextmanager
+async def lifespan(_: FastAPI) -> AsyncIterator:
+    """Context manager to handle the application lifespan."""
+    initiate_logging()
+    yield
+
 
 APP = FastAPI(
     title="Deploy on onto-ns.com",
@@ -26,7 +40,9 @@ APP = FastAPI(
     description=(
         Path(__file__).resolve().parent.parent.resolve() / "README.md"
     ).read_text(encoding="utf8"),
-    openapi_prefix="/deploy",
+    root_path="/deploy",
+    root_path_in_servers=False,
+    lifespan=lifespan,
 )
 
 
@@ -34,10 +50,9 @@ APP = FastAPI(
 async def deploy_service(
     service: Annotated[str, Query(description="The service to deploy")],
     env: Annotated[
-        list[str],
+        list[EnvironmentString],
         Query(
             description="The environment variables to set for the deployment script.",
-            pattern=r"^[A-Za-z_][A-Za-z0-9_]*=[^=]*$",
         ),
     ] = [],  # noqa: B006
 ) -> dict[str, str | int]:

@@ -4,11 +4,19 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Annotated
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, StringConstraints, field_validator
 
 DEPLOYMENT_SCRIPTS_DIR = (
     Path(__file__).resolve().parent.parent.resolve() / "deployment_scripts"
 )
+
+
+EnvironmentString = Annotated[
+    str,
+    StringConstraints(
+        pattern=r"^[A-Za-z_][A-Za-z0-9_]*=[^=]*$",
+    ),
+]
 
 
 class DeployService(BaseModel):
