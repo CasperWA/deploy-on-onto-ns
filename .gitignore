@@ -2,6 +2,7 @@
 .*_cache/
 .coverage
 coverage.xml
+dist/
 
 # secrets
 .env

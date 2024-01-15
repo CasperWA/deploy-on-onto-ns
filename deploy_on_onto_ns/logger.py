@@ -20,7 +20,7 @@ def disable_logging():
     Usage:
 
     ```python
-    from dlite_entities_service.logger import disable_logging
+    from deploy_on_onto_ns.logger import disable_logging
 
     # Do stuff, logging to all handlers.
     # ...
@@ -41,34 +41,36 @@ def disable_logging():
         logging.disable(logging.NOTSET)
 
 
-# Instantiate LOGGER
-LOGGER = logging.getLogger("deploy-on-onto-ns")
-LOGGER.setLevel(logging.DEBUG)
+def initiate_logging() -> None:
+    """Initiate logging."""
+    # Instantiate LOGGER
+    logger = logging.getLogger("deploy_on_onto_ns")
+    logger.setLevel(logging.DEBUG)
 
-# Save a file with all messages (DEBUG level)
-ROOT_DIR = Path(__file__).parent.parent.resolve()
-LOGS_DIR = ROOT_DIR.joinpath("logs/")
-LOGS_DIR.mkdir(exist_ok=True)
+    # Save a file with all messages (DEBUG level)
+    root_dir = Path(__file__).parent.parent.resolve()
+    logs_dir = root_dir.joinpath("logs/")
+    logs_dir.mkdir(exist_ok=True)
 
-# Set handlers
-FILE_HANDLER = logging.handlers.RotatingFileHandler(
-    LOGS_DIR.joinpath("deploy_on_onto_ns.log"), maxBytes=1000000, backupCount=5
-)
-FILE_HANDLER.setLevel(logging.DEBUG)
+    # Set handlers
+    file_handler = logging.handlers.RotatingFileHandler(
+        logs_dir.joinpath("deploy_on_onto_ns.log"), maxBytes=1000000, backupCount=5
+    )
+    file_handler.setLevel(logging.DEBUG)
 
-CONSOLE_HANDLER = logging.StreamHandler(sys.stdout)
-CONSOLE_HANDLER.setLevel(logging.INFO)
+    console_handler = logging.StreamHandler(sys.stdout)
+    console_handler.setLevel(logging.INFO)
 
-# Set formatters
-FILE_FORMATTER = logging.Formatter(
-    "[%(levelname)-8s %(asctime)s %(filename)s:%(lineno)d] %(message)s",
-    "%d-%m-%Y %H:%M:%S",
-)
-FILE_HANDLER.setFormatter(FILE_FORMATTER)
+    # Set formatters
+    file_formatter = logging.Formatter(
+        "[%(levelname)-8s %(asctime)s %(filename)s:%(lineno)d] %(message)s",
+        "%d-%m-%Y %H:%M:%S",
+    )
+    file_handler.setFormatter(file_formatter)
 
-CONSOLE_FORMATTER = DefaultFormatter("%(levelprefix)s [%(name)s] %(message)s")
-CONSOLE_HANDLER.setFormatter(CONSOLE_FORMATTER)
+    console_formatter = DefaultFormatter("%(levelprefix)s [%(name)s] %(message)s")
+    console_handler.setFormatter(console_formatter)
 
-# Finalize LOGGER
-LOGGER.addHandler(FILE_HANDLER)
-LOGGER.addHandler(CONSOLE_HANDLER)
+    # Finalize LOGGER
+    logger.addHandler(file_handler)
+    logger.addHandler(console_handler)
