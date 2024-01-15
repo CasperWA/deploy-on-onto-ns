@@ -6,7 +6,7 @@ from typing import Annotated
 
 from pydantic import BaseModel, Field, field_validator
 
-DEPLOYMENT_SCRIPTS = (
+DEPLOYMENT_SCRIPTS_DIR = (
     Path(__file__).resolve().parent.parent.resolve() / "deployment_scripts"
 )
 
@@ -28,7 +28,7 @@ class DeployService(BaseModel):
             resolved_value = value.resolve()
         else:
             # Expect it to be relative to the deployment scripts directory.
-            resolved_value = (DEPLOYMENT_SCRIPTS / value).resolve()
+            resolved_value = (DEPLOYMENT_SCRIPTS_DIR / value).resolve()
 
         if not resolved_value.exists():
             raise ValueError(f"Deployment script {value} does not exist.")

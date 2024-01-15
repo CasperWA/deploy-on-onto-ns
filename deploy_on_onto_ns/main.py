@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import os
 from asyncio import create_subprocess_shell, subprocess
+from logging import getLogger
 from pathlib import Path
 from shlex import quote
 from typing import Annotated
@@ -11,12 +12,13 @@ import yaml
 from fastapi import FastAPI, HTTPException, Query, status
 
 from deploy_on_onto_ns import __version__
-from deploy_on_onto_ns.logger import LOGGER
 from deploy_on_onto_ns.models import (
-    DEPLOYMENT_SCRIPTS,
+    DEPLOYMENT_SCRIPTS_DIR,
     DeployOnOntoNsResponse,
     DeployServices,
 )
+
+LOGGER = getLogger(__name__)
 
 APP = FastAPI(
     title="Deploy on onto-ns.com",
@@ -98,7 +100,7 @@ def available_services() -> dict[str, Path]:
         path to the deployment script.
 
     """
-    deploy_services_yml = DEPLOYMENT_SCRIPTS / "deploy_services.yml"
+    deploy_services_yml = DEPLOYMENT_SCRIPTS_DIR / "deploy_services.yml"
     if not deploy_services_yml.exists():
         raise FileNotFoundError(
             "Deployment services file "
