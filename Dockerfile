@@ -19,7 +19,7 @@ ENTRYPOINT uvicorn --host 0.0.0.0 --port ${PORT} --log-level debug --no-server-h
 
 FROM base as production
 
-RUN pip install gunicorn
+RUN pip install -U -e .[production]
 
 ENV PORT=80
 EXPOSE ${PORT}
