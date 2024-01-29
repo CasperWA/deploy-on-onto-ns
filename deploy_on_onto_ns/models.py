@@ -1,4 +1,5 @@
 """Pydantic data models."""
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -25,9 +26,9 @@ class DeployService(BaseModel):
 
     name: Annotated[str, Field(description="The name of the service.")]
     script: Annotated[Path, Field(description="The path to the deployment script.")]
-    aliases: Annotated[
-        list[str], Field(description="The aliases for the service.")
-    ] = []
+    aliases: Annotated[list[str], Field(description="The aliases for the service.")] = (
+        []
+    )
 
     @field_validator("script", mode="after")
     @classmethod
