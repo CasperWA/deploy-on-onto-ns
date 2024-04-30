@@ -6,6 +6,18 @@ updates:
       interval: 'daily'
     labels:
       - 'CI/CD'
-    reviewers:
-      - CasperWA
+      - skip_changelog
     target-branch: 'main'
+  - package-ecosystem: 'pip'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      time: "05:16"
+    target-branch: 'main'
+    labels:
+      - dependencies
+      - skip_changelog
+    groups:
+      pyproject:
+        patterns:
+          - "*"
