@@ -42,7 +42,7 @@ testing = [
     # "pytest-cov ~=4.0",
 ]
 production = [
-    "gunicorn ~=23.0",
+    "gunicorn ~=24.1",
 ]
 dev = [
     "pre-commit ~=4.0",
