@@ -29,9 +29,9 @@ requires-python = "~=3.10"
 dynamic = ["version", "description"]
 
 dependencies = [
-    "fastapi ~=0.135.3",
+    "fastapi ~=0.136.0",
     # "python-dotenv ~=1.0",
-    "pydantic ~=2.12",
+    "pydantic ~=2.13",
     "pyyaml ~=6.0",
     "uvicorn >=0.44.0,<1",
 ]
