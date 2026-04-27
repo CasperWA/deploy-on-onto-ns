@@ -29,11 +29,11 @@ requires-python = "~=3.10"
 dynamic = ["version", "description"]
 
 dependencies = [
-    "fastapi ~=0.136.0",
+    "fastapi ~=0.136.1",
     # "python-dotenv ~=1.0",
     "pydantic ~=2.13",
     "pyyaml ~=6.0",
-    "uvicorn >=0.44.0,<1",
+    "uvicorn >=0.46.0,<1",
 ]
 
 [project.optional-dependencies]
@@ -45,7 +45,7 @@ production = [
     "gunicorn ~=25.3",
 ]
 dev = [
-    "pre-commit ~=4.5",
+    "pre-commit ~=4.6",
 ]
 
 [project.urls]
