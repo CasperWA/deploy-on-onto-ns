@@ -3,15 +3,12 @@
 from __future__ import annotations
 
 import logging
+import logging.handlers
 import sys
 from contextlib import contextmanager
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from uvicorn.logging import DefaultFormatter
-
-if TYPE_CHECKING:  # pragma: no cover
-    import logging.handlers
 
 
 @contextmanager
