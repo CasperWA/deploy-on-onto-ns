@@ -33,7 +33,7 @@ dependencies = [
     # "python-dotenv ~=1.0",
     "pydantic ~=2.13",
     "pyyaml ~=6.0",
-    "uvicorn >=0.52.3,<1",
+    "uvicorn >=0.52.4,<1",
 ]
 
 [project.optional-dependencies]
@@ -42,7 +42,7 @@ testing = [
     # "pytest-cov ~=4.0",
 ]
 production = [
-    "gunicorn ~=26.0",
+    "gunicorn ~=26.1",
 ]
 dev = [
     "pre-commit ~=4.6",
